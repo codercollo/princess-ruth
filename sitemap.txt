@@ -1,0 +1,329 @@
+================================================================================
+SITEMAP & PAGE STRUCTURE
+{{ATELIER_NAME}}
+================================================================================
+6 public routes + 1 utility route. All statically prerendered.
+
+
+--------------------------------------------------------------------------------
+ROUTE TABLE
+--------------------------------------------------------------------------------
+  PATH              FILE                        NAV LABEL   PRIORITY  PRERENDER
+  ----------------------------------------------------------------------------
+  /                 pages/index.vue             Home        1.0       yes
+  /gallery          pages/gallery.vue           Gallery     0.9       yes
+  /services         pages/services.vue          Services    0.8       yes
+  /about            pages/about.vue             About       0.7       yes
+  /portfolio        pages/portfolio.vue         Portfolio   0.8       yes
+  /portfolio/[slug] pages/portfolio/[slug].vue  —           0.6       yes (gen)
+  /contact          pages/contact.vue           Contact     0.9       yes
+  /*                error.vue                   —           —         no
+
+Nav order: Home · Gallery · Services · Portfolio · About · Contact
+  Gallery sits second because photography is the conversion engine.
+  Contact sits last and is ALSO the persistent button in the header.
+
+Deliberately not built in v1:
+  /shop, /cart, /blog, /faq (FAQ is folded into Services),
+  /jewellery and /intimates (folded into Services + a Gallery filter),
+  /testimonials (folded into Home + About).
+
+
+--------------------------------------------------------------------------------
+GLOBAL CHROME (present on every route)
+--------------------------------------------------------------------------------
+  TheProsceniumFrame   Fixed 1px brass hairline inset 14px from the viewport
+                       edge, with a small bronze filigree mark at each corner.
+                       Hidden below 768px (mobile gets a top rule only).
+                       pointer-events: none, aria-hidden.
+
+  TheHeader            Transparent over the hero, then gains a translucent
+                       bògòlan-black backdrop-blur band after 80px of scroll.
+                       Left: wordmark. Centre: nav (desktop ≥1024px).
+                       Right: WhatsApp pill + hamburger (below 1024px).
+
+  TheMobileDrawer      Full-screen. Opens as a curtain pull from the right,
+                       revealing nav items that stagger up behind it.
+                       Traps focus. Closes on route change and on Escape.
+
+  TheTapeMeasure       Fixed left edge, desktop only. A vertical tape with cm
+                       ticks; a brass needle marks scroll position. Hidden for
+                       reduced-motion and below 1280px.
+
+  TheCurtain           Fixed overlay, z-top. Two panels (maroon + indigo with
+                       woven pattern) that part on first load and sweep across
+                       on route change. See component-inventory.txt.
+
+  TheFooter            Four columns collapsing to one. Address, hours, quick
+                       links, socials, WhatsApp CTA, copyright.
+
+  TheStickyContactBar  Mobile only (<768px). Fixed bottom bar, two buttons:
+                       "WhatsApp" and "Call". Appears after 40% scroll depth.
+                       This is the single most important conversion element on
+                       the site — do not let the design swallow it.
+
+
+================================================================================
+1. HOME — /
+================================================================================
+Job: in 8 seconds, communicate that this is a real workshop making beautiful
+clothes for real women, and put a WhatsApp button within thumb's reach.
+
+  §1  OVERTURE / HERO
+      The curtain pull resolves into: a full-bleed image of a garment under
+      warm light in her shop. Headline set in the display face, mask-revealed
+      line by line. One primary CTA (WhatsApp) + one secondary (See the work).
+      A single quiet line of proof beneath: "{{SHOP_AREA}} · {{YEARS}} years ·
+      six machines". Scroll cue at the foot.
+      Motion: curtain pull (once per session), then line mask reveal.
+
+  §2  WHAT SHE MAKES — "the rail"
+      Four category panels laid out as garments hanging on a rail: unequal
+      widths, not a 4-up grid of identical cards.
+        Traditional & ceremonial · Official & office · Occasion & bridal ·
+        Alterations & repairs
+      Each links to the matching Gallery filter.
+      Motion: panels settle in on first view, staggered, once. No hover lift.
+
+  §3  THE SPOTLIGHT — one garment, one story
+      Full-bleed. A single featured piece. Scrubbed spatial zoom pushes from
+      the full garment into a detail macro (a hem, beadwork, a seam) as you
+      scroll, while a short caption crossfades. This is the page's one bold
+      moment. Everything either side of it is quiet.
+      Motion: scrubbed scale + clip. Reduced-motion → static detail crop.
+
+  §4  THE WORKSHOP — six machines, six hands
+      Split layout: a shop interior frame on one side; on the other, three
+      figures presented as facts, not as a stats card row:
+        {{YEARS}} years at the machine · 6 machines running · 6 people employed
+      Plus two sentences about how the shop actually works.
+      Motion: counters tick up once on entry. Nothing else.
+
+  §5  HOW A GARMENT IS MADE — the running order
+      This IS a sequence, so numbering is justified here and nowhere else.
+        1 Talk  2 Measure  3 Cut  4 First fitting  5 Finish
+      Horizontal on desktop, vertical basting-stitch timeline on mobile.
+      Each step gets one sentence and an honest time note.
+      Motion: the basting-stitch line draws itself on scroll (stroke-dashoffset,
+      scrubbed). Steps fade in against it.
+
+  §6  SELECTED WORK
+      6 portfolio pieces in the distorted grid treatment (a taste of Gallery).
+      Ends with one link to /portfolio.
+      Motion: column speed offset + velocity skew.
+
+  §7  IN HER WORDS — kanga testimonials
+      2–3 client quotes set on kanga-patterned bands, the way a kanga carries a
+      printed proverb. Name + occasion beneath. Carousel on mobile, stacked
+      offset bands on desktop.
+      Motion: none beyond entry. Quotes don't need to move.
+
+  §8  ALSO FROM THE SHOP
+      A short, quiet band for jewellery and intimates. Two images, two lines,
+      one link into the Gallery filter. Must not compete with the tailoring.
+
+  §9  VISIT / CLOSING CALL
+      Address, hours, a small map still, WhatsApp + Call buttons, directions
+      link. Closes the page with the same warmth it opened with.
+      Motion: the curtain edges ease back in from left and right at the page
+      foot — the show closing. Subtle, 30% travel, not a full close.
+
+
+================================================================================
+2. GALLERY — /gallery
+================================================================================
+Job: browsing. Volume of work, fast filtering, one tap to WhatsApp about any
+specific piece.
+
+  §1  HEADER BAND
+      Compact. Title + one line + live count ("64 pieces").
+
+  §2  FILTER RAIL
+      Chips, horizontally scrollable on mobile, sticky under the header.
+        All · Traditional · Office & official · Occasion & bridal ·
+        Bridal party · Repairs & restyles · Jewellery · Intimates
+      Filtering is client-side and instant. Updates ?filter= in the URL so a
+      filtered view is shareable. Uses GSAP Flip so items move rather than
+      pop when the filter changes.
+
+  §3  THE DISTORTED GRID
+      Masonry-ish, deliberately irregular: 3 columns on desktop, 2 on tablet,
+      1 on mobile. Columns scroll at slightly different speeds (0.92 / 1.0 /
+      1.08) and skew by up to ~4deg based on scroll velocity, settling back to
+      0 when scrolling stops. Card heights vary by a fixed set of aspect
+      ratios (3:4, 1:1, 4:5, 2:3) assigned per item, not randomly at runtime
+      — random heights cause layout shift on rehydration.
+
+      CARD BEHAVIOUR
+        Desktop hover → image dims slightly, a warm light pools from the top,
+        title + fabric note rise, two buttons appear: WhatsApp · Call.
+        Touch → the same two buttons are ALWAYS visible at the card foot.
+        Keyboard → card is focusable; focus shows the same state as hover.
+        The WhatsApp link prefills: "Hi {{TAILOR_SHORT}}, I'm interested in
+        [piece name] from your gallery."
+
+  §4  LOAD MORE
+      12 per page, explicit button. Shows "Showing 24 of 64".
+      New items animate in with Flip, not a full re-render.
+
+  §5  CLOSING CTA
+      "Didn't see it? Describe it and she'll make it." + WhatsApp.
+
+
+================================================================================
+3. SERVICES — /services
+================================================================================
+Job: answer "do you do X, how long, roughly how much" without a phone call.
+Structured like a theatre programme's running order.
+
+  §1  HEADER BAND
+
+  §2  CUSTOM TAILORING
+      Four service entries, each with: what it is, what's included, what to
+      bring, typical turnaround, price treatment (range or "from" or
+      "on request" — decide in the brief).
+        - Traditional & ceremonial wear
+        - Official & office wear
+        - Occasion & event wear
+        - Bridal & bridal party
+
+  §3  ALTERATIONS & REPAIRS
+      A compact table, not cards: service | typical turnaround | from-price.
+        Hemming · Taking in / letting out · Zip replacement · Relining ·
+        Strap & fastening repair · Restyle an existing garment
+
+  §4  THE SHOP COUNTER
+      Jewellery and women's intimates. Two short blocks, honest and brief.
+
+  §5  HOW IT WORKS
+      The same five steps as Home §5 but expanded — what happens at each
+      stage, what she needs from the client, deposit and fitting policy.
+
+  §6  QUESTIONS
+      Accordion, 6–8 entries. Genuine questions: fabric, turnaround, deposits,
+      remote measurements, rush jobs, what happens if it doesn't fit.
+      Motion: accordion opens as a curtain draw (height + clip), 320ms.
+
+  §7  CTA BAND
+
+
+================================================================================
+4. PORTFOLIO — /portfolio  and  /portfolio/[slug]
+================================================================================
+Job: depth, where Gallery is breadth. Commissioned pieces with a story.
+Distinction to hold onto: Gallery = every piece, browsable. Portfolio = 10–16
+chosen pieces, each with a client brief, the fabric, the challenge, the result.
+
+  INDEX  /portfolio
+    §1  HEADER BAND
+    §2  FEATURED PIECE — one large, full-bleed, with a spatial zoom.
+    §3  THE CASES — alternating left/right image-and-text rows. Each shows
+        the occasion, the client's first name, the fabric, and one line of
+        the brief. Links into the detail page.
+    §4  CTA BAND — "Commission something"
+
+  DETAIL  /portfolio/[slug]
+    §1  Piece title, occasion, date, fabric
+    §2  Hero image, full width
+    §3  The brief — 2–3 short paragraphs in her voice
+    §4  Image set — 3–6 frames including at least one detail macro
+    §5  Client quote, if given
+    §6  Prev / next piece
+    §7  "Want something like this?" → WhatsApp, prefilled with the piece name
+
+
+================================================================================
+5. ABOUT — /about
+================================================================================
+Job: turn a business into a person. This page is what makes a stranger trust
+sending money for a dress that doesn't exist yet.
+
+  §1  PORTRAIT & OPENING
+      Large portrait of {{TAILOR_NAME}} at the cutting table. Her name, and
+      two sentences in first person. Not a mission statement.
+
+  §2  HER STORY
+      3–4 short paragraphs. Where she learned, when she opened, what changed,
+      what she's proudest of. Offset serif text against a single image.
+      Motion: line mask reveal once. Nothing else — this page should feel calm.
+
+  §3  THE TEAM — six hands
+      Six portraits, uneven grid, each with first name, role, years with her.
+      If she'd rather not name them: one group frame + a paragraph about the
+      team, and cut the grid.
+
+  §4  THE WORKSHOP
+      2–3 frames of the space and the machines, with a short caption each.
+      "Six machines. Two overlockers. One very old Singer that outlives us all."
+
+  §5  WHAT SHE STANDS BY
+      Three short commitments — fit, honest timelines, fair work. Prose, not
+      icon cards.
+
+  §6  FIND THE SHOP
+      Address block, hours, a map still, a "Get directions" deep link, and
+      landmark-based directions (in Nairobi, landmarks beat street names:
+      "opposite the stage, first floor above the chemist").
+
+  §7  CTA BAND
+
+
+================================================================================
+6. CONTACT — /contact
+================================================================================
+Job: make it effortless to start a conversation, in the channel the visitor
+already prefers. Channel order matters: WhatsApp first, call second, form last.
+
+  §1  HEADER BAND — short, warm, one line.
+
+  §2  CHANNELS
+      Three blocks, WhatsApp given the most visual weight:
+        WhatsApp   — primary, prefilled message, opens app on mobile
+        Call       — tel: link, with hours beside it so nobody calls at 11pm
+        Email      — mailto:, for diaspora and corporate enquiries
+
+  §3  THE FORM
+      Layout takes its cue from the reference image: a dark panel, underline-
+      only inputs with a brass focus rule, generous spacing.
+      Fields: Name* · Phone* · Email · What do you need? (select) ·
+              When do you need it? (date, optional) · Your message*
+      Honeypot field + timestamp check for spam. No CAPTCHA.
+      POSTs to server/api/contact.post.ts → email via Resend/Postmark, plus a
+      WhatsApp deep link shown on success ("Prefer to chat? Continue here").
+      Motion: the submit button's label swaps for a stitching progress mark
+      while sending. Success replaces the form with a short confirmation and
+      the next-step link — it does not just show a green toast.
+
+  §4  MAP
+      Full-width. Leaflet + OpenStreetMap with a warm dark tile filter to match
+      the palette, a custom brass pin, and a card overlay with the address and
+      a "Open in Google Maps" link. Lazy-mounted only when scrolled into view.
+      Fallback if the map fails to load: a static image + address + link.
+
+  §5  VISITING
+      Hours table, parking/matatu notes, landmark directions, "walk-ins
+      welcome for repairs; fittings by appointment".
+
+
+================================================================================
+NAVIGATION RULES
+================================================================================
+  - Current route is marked with a brass underline and aria-current="page".
+  - Every page ends with exactly one CTA band. Never two.
+  - WhatsApp is reachable from every viewport at all times: header pill on
+    desktop, sticky bottom bar on mobile.
+  - Route change plays the curtain sweep (~700ms total, content swaps behind
+    the closed panel at the midpoint). Nuxt's <NuxtPage> page transition hooks
+    drive it: onLeave closes, onEnter opens.
+  - Breadcrumbs only on /portfolio/[slug].
+  - The logo always returns to /.
+
+
+================================================================================
+URL & DATA NOTES
+================================================================================
+  Slugs: kebab-case, descriptive, stable. /portfolio/emerald-kitenge-ruracio
+  Filters: ?filter=occasion — read on mount so links are shareable.
+  Gallery and portfolio data live in app/data/*.ts (typed) for v1. If she is to
+  update it herself later, migrate to @nuxt/content markdown with a frontmatter
+  schema — same shape, no component changes needed.

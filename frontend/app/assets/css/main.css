@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ground:     #16110E;
+  --color-surface:    #221A15;
+  --color-ochre:      #C98A2B;
+  --color-maroon:     #6B1F2A;
+  --color-indigo:     #23395B;
+  --color-calico:     #EFE6D8;
+  --color-brass:      #A9834E;
+  --color-bronze:     #C9A46A;
+  --color-brass-dim:  #6E5636;
+  --color-muted:      #A9A093;
+  --color-faint:      #6E675E;
+  --color-kente:      #1E6B4F;
+  --color-clay:       #8C4A2F;
+  --color-error:      #C0553F;
+
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans:    "Archivo", "Helvetica Neue", Arial, sans-serif;
+
+  --text-xs: 0.765rem;  --text-sm: 0.882rem;  --text-base: 1rem;
+  --text-lg: 1.118rem;  --text-xl: 1.294rem;  --text-2xl: 1.588rem;
+  --text-3xl: 2rem;     --text-4xl: 2.588rem; --text-5xl: 3.412rem;
+  --text-6xl: 4.471rem; --text-7xl: 6.118rem;
+
+  --radius-xs: 2px; --radius-sm: 4px;
+
+  --ease-curtain: cubic-bezier(0.76, 0.02, 0.18, 1);
+  --ease-soft:    cubic-bezier(0.33, 1, 0.68, 1);
+
+  --breakpoint-xs: 30rem;
+}
+
+:root {
+  font-size: 17px;
+  --frame-inset: 14px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --section-y: clamp(3.5rem, 3rem + 3vw, 8rem);
+  --t-hero: clamp(3.2rem, 1.8rem + 7vw, 7.5rem);
+  --t-h2: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+  --t-h3: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  color-scheme: dark;
+
+  /* Scrim alphas (used in hero + gallery) */
+  --c-scrim-40: rgba(22, 17, 14, 0.40);
+  --c-scrim-72: rgba(22, 17, 14, 0.72);
+
+  /* Royal accent — bridal/occasion scope only */
+  --color-cream:      #F3E7CE;
+  --color-cream-dim:  #E8D6AC;
+  --color-gold:       #D9AE54;
+  --color-gold-deep:  #A9772E;
+
+  /* Lamp (spotlight hover on cards) */
+  --c-lamp: radial-gradient(
+    120% 90% at 50% 0%,
+    rgba(201, 138, 43, 0.22) 0%,
+    rgba(201, 138, 43, 0) 62%
+  );
+}
+
+html {
+  background: var(--color-ground);
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-calico);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+}
+
+.playbill {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 125;
+  font-weight: 600;
+  font-size: 0.706rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-brass);
+}
+
+.baste {
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-brass-dim) 0 6px,
+    transparent 6px 13px
+  );
+  border: 0;
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-bronze);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Scoped royal accent — bridal/occasion only ──────────────────
+   These classes MUST NOT appear outside category: bridal / occasion.
+   (See design-tokens.txt §1 USAGE RULES)
+─────────────────────────────────────────────────────────────────── */
+.thread-edge {
+  border-image-source: linear-gradient(
+    115deg,
+    var(--color-gold-deep) 0%, var(--color-gold) 35%,
+    var(--color-cream)     50%, var(--color-gold) 65%,
+    var(--color-gold-deep) 100%
+  );
+  border-image-slice: 1;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+.bridal-panel {
+  background: var(--color-cream);
+  color: var(--color-ground);
+}
+
+/* Corner ornament: two opposing corners only, never all four */
+.embroidery-corner {
+  width: 56px;
+  height: 56px;
+  color: var(--color-gold);
+}
